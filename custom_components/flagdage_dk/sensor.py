@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+from datetime import datetime, timedelta
+import logging
+from zoneinfo import ZoneInfo
+
 from astral import Observer
 from astral.sun import sun
-from datetime import datetime, timedelta
-from dateutil import tz
-
-import logging
-import pytz
 
 from homeassistant.const import ATTR_ATTRIBUTION, ATTR_DATE, ATTR_DEVICE_CLASS
+
 from .const import (
     CONF_CLIENT,
     CONF_OFFSET,
@@ -35,40 +35,44 @@ _LOGGER: logging.Logger = logging.getLogger(__package__)
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_entry(hass, entry, async_add_entities):
+    data = hass.data[DOMAIN][entry.entry_id]
+    flagdays = data[CONF_CLIENT]
 
     # Define a update function
     async def async_update_data():
-        # Retrieve the client stored in the hass data stack
-        flagdays = hass.data[DOMAIN][CONF_CLIENT]
         # Call, and wait for it to finish, the function with the refresh procedure
-        await hass.async_add_executor_job(flagdays.update)
+        return await hass.async_add_executor_job(flagdays.update)
 
     # Create a coordinator
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
+        config_entry=entry,
         name=CONF_PLATFORM,
         update_method=async_update_data,
         update_interval=timedelta(minutes=UPDATE_INTERVAL),
     )
 
     # Immediate refresh
-    await coordinator.async_request_refresh()
+    await coordinator.async_config_entry_first_refresh()
 
     # Add the sensor to Home Assistant
-    async_add_entities(
-        [FlagDaysSensor(hass, coordinator, hass.data[DOMAIN][CONF_CLIENT])]
-    )
+    async_add_entities([FlagDaysSensor(hass, coordinator, flagdays, data[CONF_OFFSET])])
 
 
 class FlagDaysSensor(SensorEntity):
-    def __init__(self, hass, coordinator, flagdays) -> None:
+    def __init__(self, hass, coordinator, flagdays, offset) -> None:
         self.hass = hass
+        self._offset = offset
         self.coordinator = coordinator
         self.flagdays = flagdays
-        self.nextFlagday = flagdays.flagdays[0]
         self.flagUpTime, self.flagDownTime = 0, 0
+
+    @property
+    def nextFlagday(self):
+        """Always the currently next flagday (None if there is none)."""
+        return self.flagdays.flagdays[0] if self.flagdays.flagdays else None
 
     @property
     def name(self):
@@ -80,12 +84,15 @@ class FlagDaysSensor(SensorEntity):
 
     @property
     def state(self):
+        if self.nextFlagday is None:
+            return None
         geo = Observer(
             self.hass.config.latitude,
             self.hass.config.longitude,
             self.hass.config.elevation,
         )
-        s = sun(geo, date=self.nextFlagday.date, tzinfo=tz.gettz("Europe/Copenhagen"))
+        tzinf=ZoneInfo(key='Europe/Copenhagen')
+        s = sun(geo, date=self.nextFlagday.date, tzinfo=tzinf)
         self.flagUpTime = (
             s["sunrise"].replace(hour=8, minute=0, second=0)
             if s["sunrise"].hour < 8
@@ -93,14 +100,15 @@ class FlagDaysSensor(SensorEntity):
         )
         self.flagDownTime = s["sunset"]
 
-        dt_now = datetime.now().astimezone(pytz.timezone("Europe/Copenhagen"))
-        offset = timedelta(minutes=self.hass.data[DOMAIN][CONF_OFFSET])
-
+        dt_now = datetime.now().astimezone(tzinf)
+        _LOGGER.debug(f"Now: {dt_now}")
+        offset = timedelta(minutes=self._offset)
+        _LOGGER.debug(f"flagUpTime: {self.flagUpTime}")
         if self.flagUpTime > dt_now:
             return self.flagUpTime - offset
         elif (
             type(self.nextFlagday.halfMast) is datetime
-            and self.nextFlagday.halfMast > dt_now
+            and self.nextFlagday.halfMast.timestamp() > dt_now.timestamp()
         ):
             return self.nextFlagday.halfMast - offset
         else:
@@ -108,10 +116,18 @@ class FlagDaysSensor(SensorEntity):
 
     @property
     def unique_id(self):
-        return "1708981ec9bb4fbfb5d183771a888af0"
+        return "2b5bde57971b4061a6e83f83c141a534"
 
     @property
     def extra_state_attributes(self):
+        if self.nextFlagday is None:
+            return {
+                ATTR_FLAGDAY_NAME: None,
+                ATTR_DAYS: None,
+                "future_flagdays": [],
+                ATTR_DEVICE_CLASS: "timestamp",
+                ATTR_ATTRIBUTION: CREDITS,
+            }
         attr = {
             ATTR_FLAGDAY_NAME: self.nextFlagday.name,
             ATTR_DAYS: self.flagdays.days,
@@ -147,6 +163,7 @@ class FlagDaysSensor(SensorEntity):
     async def async_update(self):
         """Update the entity. Only used by the generic entity update service."""
         await self.coordinator.async_request_refresh()
+        self.async_write_ha_state()
 
     async def async_added_to_hass(self):
         """When entity is added to hass."""

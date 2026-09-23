@@ -1,0 +1,97 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Flagdays DK",
+        "description": "Grundindstillinger. Egne flagdage kan du tilføje bagefter via \"Konfigurer\".",
+        "data": {
+          "offset": "Offset før flag hejses/tages ned (minutter)",
+          "include": "Include (særlige flag eller dele af navne)",
+          "exclude": "Exclude – standard (sæt flueben for at udelukke)",
+          "exclude_custom": "Exclude – egne ord"
+        },
+        "data_description": {
+          "offset": "Minutter før flag hejses/tages ned, bruges fx til automatiseringer. Standard: 10",
+          "include": "Navn på et særligt flag (fx Erfalasorput) eller en del af flagdagens navn",
+          "exclude": "Flagdage, hvis navn indeholder denne tekst, udelukkes. \"all\" skjuler alle standardflagdage.",
+          "exclude_custom": "Tilføj eller fjern yderligere ord manuelt."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Flagdays DK er allerede sat op.",
+      "single_instance_allowed": "Kun én instans er tilladt."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flagdays DK",
+        "menu_options": {
+          "settings": "Indstillinger (offset, include, exclude)",
+          "add_flagday": "Tilføj egen flagdag",
+          "remove_flagday": "Fjern egne flagdage",
+          "sensors": "Sensorer som kilde"
+        }
+      },
+      "settings": {
+        "title": "Indstillinger",
+        "data": {
+          "offset": "Offset før flag hejses/tages ned (minutter)",
+          "include": "Include (særlige flag eller dele af navne)",
+          "exclude": "Exclude – standard (sæt flueben for at udelukke)",
+          "exclude_custom": "Exclude – egne ord"
+        },
+        "data_description": {
+          "offset": "Minutter før flag hejses/tages ned, bruges fx til automatiseringer. Standard: 10",
+          "include": "Navn på et særligt flag (fx Erfalasorput) eller en del af flagdagens navn",
+          "exclude": "Flagdage, hvis navn indeholder denne tekst, udelukkes. \"all\" skjuler alle standardflagdage.",
+          "exclude_custom": "Tilføj eller fjern yderligere ord manuelt."
+        }
+      },
+      "add_flagday": {
+        "title": "Tilføj egen flagdag",
+        "description": "Dato som dag-måned-år (fx 7-2-1957, så beregnes alderen) eller dag-måned (fx 7-2). Slutdato og flag er valgfrie.",
+        "data": {
+          "name": "Navn",
+          "date": "Dato",
+          "date_end": "Slutdato (valgfri)",
+          "flag": "Flag (valgfrit)",
+          "add_another": "Tilføj endnu en flagdag"
+        },
+        "data_description": {
+          "date_end": "Til flagdage over flere dage: dag-måned (fx 10-1), i samme år som startdatoen.",
+          "flag": "Navn på et særligt flag, fx Erfalasorput eller Merkið. Tom = Dannebrog."
+        }
+      },
+      "remove_flagday": {
+        "title": "Fjern egne flagdage",
+        "data": {
+          "remove": "Flagdage der skal fjernes"
+        }
+      },
+      "sensors": {
+        "title": "Sensorer som kilde",
+        "description": "Sensorer (eller grupper af sensorer) med en dato-attribut, fx fra Anniversaries, tilføjes som flagdage. Ændringer i sensorerne overtages først, når integrationen genindlæses.",
+        "data": {
+          "sensors": "Sensorer / grupper",
+          "attribute_names": "Attributnavne med datoen"
+        },
+        "data_description": {
+          "sensors": "Sensor- eller gruppe-entiteter. Sensorens visningsnavn bliver flagdagens navn.",
+          "attribute_names": "Den første eksisterende attribut med en dato bruges. Standard: date"
+        }
+      }
+    },
+    "error": {
+      "invalid_date": "Ugyldig dato. Format: dag-måned-år eller dag-måned (fx 7-2-1957).",
+      "name_exists": "Der findes allerede en egen flagdag med dette navn.",
+      "name_required": "Indtast venligst et navn.",
+      "invalid_date_end": "Ugyldig slutdato. Format: dag-måned (fx 10-1).",
+      "date_end_before_start": "Slutdatoen må ikke ligge før startdatoen."
+    },
+    "abort": {
+      "no_flagdays": "Der er ingen egne flagdage."
+    }
+  }
+}

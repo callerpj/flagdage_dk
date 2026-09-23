@@ -1,0 +1,23 @@
+{
+  "domain": "flagdage_dk",
+  "name": "FlagDage DK",
+  "documentation": "https://github.com/callerpj/Flagdage_DK",
+  "issue_tracker": "https://github.com/callerpj/Flagdage_DK/issues",
+  "dependencies": [],
+  "after_dependencies": [
+    "anniversaries",
+    "group"
+  ],
+  "codeowners": [
+    "@callerpj"
+  ],
+  "requirements": [
+    "astral"
+  ],
+  "iot_class": "calculated",
+  "version": "26.9.1",
+  "loggers": [
+    "custom_components.flagdage_dk"
+  ],
+  "config_flow": true
+}

@@ -1,0 +1,97 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Flagdays DK",
+        "description": "Basic settings. You can add custom flagdays afterwards via \"Configure\".",
+        "data": {
+          "offset": "Offset before flag up/down (minutes)",
+          "include": "Include (special flags or name parts)",
+          "exclude": "Exclude – defaults (check to exclude)",
+          "exclude_custom": "Exclude – custom strings"
+        },
+        "data_description": {
+          "offset": "Minutes before flag up/down, used for triggers e.g. automations. Default: 10",
+          "include": "Name of a special flag (e.g. Erfalasorput) or part of a flagday name",
+          "exclude": "Flagdays whose name contains this text are excluded. \"all\" hides all default flagdays.",
+          "exclude_custom": "Add or remove further strings manually."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Flagdays DK is already set up.",
+      "single_instance_allowed": "Only a single instance is allowed."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flagdays DK",
+        "menu_options": {
+          "settings": "Settings (offset, include, exclude)",
+          "add_flagday": "Add custom flagday",
+          "remove_flagday": "Remove custom flagdays",
+          "sensors": "Sensors as source"
+        }
+      },
+      "settings": {
+        "title": "Settings",
+        "data": {
+          "offset": "Offset before flag up/down (minutes)",
+          "include": "Include (special flags or name parts)",
+          "exclude": "Exclude – defaults (check to exclude)",
+          "exclude_custom": "Exclude – custom strings"
+        },
+        "data_description": {
+          "offset": "Minutes before flag up/down, used for triggers e.g. automations. Default: 10",
+          "include": "Name of a special flag (e.g. Erfalasorput) or part of a flagday name",
+          "exclude": "Flagdays whose name contains this text are excluded. \"all\" hides all default flagdays.",
+          "exclude_custom": "Add or remove further strings manually."
+        }
+      },
+      "add_flagday": {
+        "title": "Add custom flagday",
+        "description": "Date as day-month-year (e.g. 7-2-1957, the age is calculated) or day-month (e.g. 7-2). End date and flag are optional.",
+        "data": {
+          "name": "Name",
+          "date": "Date",
+          "date_end": "End date (optional)",
+          "flag": "Flag (optional)",
+          "add_another": "Add another flagday"
+        },
+        "data_description": {
+          "date_end": "For prolonged flagdays: day-month (e.g. 10-1), in the same year as the start date.",
+          "flag": "Name of a special flag, e.g. Erfalasorput or Merkið. Empty = Dannebrog."
+        }
+      },
+      "remove_flagday": {
+        "title": "Remove custom flagdays",
+        "data": {
+          "remove": "Flagdays to remove"
+        }
+      },
+      "sensors": {
+        "title": "Sensors as source",
+        "description": "Sensors (or groups of sensors) with a date attribute, e.g. from Anniversaries, are added as flagdays. Changes to the sensors are only picked up after the integration is reloaded.",
+        "data": {
+          "sensors": "Sensors / groups",
+          "attribute_names": "Attribute names holding the date"
+        },
+        "data_description": {
+          "sensors": "Sensor or group entities. The friendly name of the sensor becomes the name of the flagday.",
+          "attribute_names": "The first existing attribute holding a date is used. Default: date"
+        }
+      }
+    },
+    "error": {
+      "invalid_date": "Invalid date. Format: day-month-year or day-month (e.g. 7-2-1957).",
+      "name_exists": "A custom flagday with this name already exists.",
+      "name_required": "Please enter a name.",
+      "invalid_date_end": "Invalid end date. Format: day-month (e.g. 10-1).",
+      "date_end_before_start": "The end date must not be before the start date."
+    },
+    "abort": {
+      "no_flagdays": "There are no custom flagdays."
+    }
+  }
+}

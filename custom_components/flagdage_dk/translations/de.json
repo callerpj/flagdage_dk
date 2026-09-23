@@ -1,0 +1,97 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Flagdays DK",
+        "description": "Grundeinstellungen. Eigene Flaggetage kannst du danach über \"Konfigurieren\" hinzufügen.",
+        "data": {
+          "offset": "Offset vor Flagge hissen/einholen (Minuten)",
+          "include": "Include (Sonderflaggen oder Namensteile)",
+          "exclude": "Exclude – Standard (Häkchen setzen)",
+          "exclude_custom": "Exclude – eigene Begriffe"
+        },
+        "data_description": {
+          "offset": "Zeit in Minuten vor Hissen/Einholen, z. B. für Automatisierungen. Standard: 10",
+          "include": "Name einer Sonderflagge (z. B. Erfalasorput) oder Teil des Flaggentag-Namens",
+          "exclude": "Flaggentage, deren Name diesen Text enthält, werden ausgeblendet. \"all\" blendet alle Standard-Flaggentage aus.",
+          "exclude_custom": "Weitere Begriffe manuell hinzufügen oder entfernen."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "Flagdays DK ist bereits eingerichtet.",
+      "single_instance_allowed": "Es ist nur eine Instanz möglich."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Flagdays DK",
+        "menu_options": {
+          "settings": "Einstellungen (Offset, Include, Exclude)",
+          "add_flagday": "Eigenen Flaggentag hinzufügen",
+          "remove_flagday": "Eigene Flaggetage entfernen",
+          "sensors": "Sensoren als Quelle"
+        }
+      },
+      "settings": {
+        "title": "Einstellungen",
+        "data": {
+          "offset": "Offset vor Flagge hissen/einholen (Minuten)",
+          "include": "Include (Sonderflaggen oder Namensteile)",
+          "exclude": "Exclude – Standard (Häkchen setzen)",
+          "exclude_custom": "Exclude – eigene Begriffe"
+        },
+        "data_description": {
+          "offset": "Zeit in Minuten vor Hissen/Einholen, z. B. für Automatisierungen. Standard: 10",
+          "include": "Name einer Sonderflagge (z. B. Erfalasorput) oder Teil des Flaggentag-Namens",
+          "exclude": "Flaggentage, deren Name diesen Text enthält, werden ausgeblendet. \"all\" blendet alle Standard-Flaggentage aus.",
+          "exclude_custom": "Weitere Begriffe manuell hinzufügen oder entfernen."
+        }
+      },
+      "add_flagday": {
+        "title": "Eigenen Flaggentag hinzufügen",
+        "description": "Datum als Tag-Monat-Jahr (z. B. 7-2-1957, dann wird das Alter berechnet) oder Tag-Monat (z. B. 7-2). Enddatum und Flagge sind optional.",
+        "data": {
+          "name": "Name",
+          "date": "Datum",
+          "date_end": "Enddatum (optional)",
+          "flag": "Flagge (optional)",
+          "add_another": "Weiteren Flaggentag hinzufügen"
+        },
+        "data_description": {
+          "date_end": "Für mehrtägige Flaggetage: Tag-Monat (z. B. 10-1), im selben Jahr wie das Startdatum.",
+          "flag": "Name einer besonderen Flagge, z. B. Erfalasorput oder Merkið. Leer = Dannebrog."
+        }
+      },
+      "remove_flagday": {
+        "title": "Eigene Flaggetage entfernen",
+        "data": {
+          "remove": "Zu entfernende Flaggetage"
+        }
+      },
+      "sensors": {
+        "title": "Sensoren als Quelle",
+        "description": "Sensoren (oder Gruppen von Sensoren) mit einem Datums-Attribut, z. B. von Anniversaries, werden als Flaggetage übernommen. Änderungen an den Sensoren werden erst nach einem Neuladen der Integration übernommen.",
+        "data": {
+          "sensors": "Sensoren / Gruppen",
+          "attribute_names": "Attributnamen mit dem Datum"
+        },
+        "data_description": {
+          "sensors": "Sensor- oder Gruppen-Entitäten. Der Anzeigename des Sensors wird zum Namen des Flaggentags.",
+          "attribute_names": "Das erste vorhandene Attribut mit einem Datum wird verwendet. Standard: date"
+        }
+      }
+    },
+    "error": {
+      "invalid_date": "Ungültiges Datum. Format: Tag-Monat-Jahr oder Tag-Monat (z. B. 7-2-1957).",
+      "name_exists": "Ein eigener Flaggentag mit diesem Namen existiert bereits.",
+      "name_required": "Bitte einen Namen eingeben.",
+      "invalid_date_end": "Ungültiges Enddatum. Format: Tag-Monat (z. B. 10-1).",
+      "date_end_before_start": "Das Enddatum darf nicht vor dem Startdatum liegen."
+    },
+    "abort": {
+      "no_flagdays": "Es gibt keine eigenen Flaggetage."
+    }
+  }
+}

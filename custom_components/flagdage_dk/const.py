@@ -5,14 +5,15 @@ CONF_FLAGDAYS = "flagdays"
 CONF_INCLUDE = "include"
 CONF_OFFSET = "offset"
 CONF_PLATFORM = "sensor"
+CONF_SENSORS = "sensors"
 
-CREDITS = "J-Lindvig (https://github.com/J-Lindvig)"
+CREDITS = "callerpj (https://github.com/callerpj)"
 
 DEFAULT_ATTRIBUTE_NAMES = ["date"]
 DEFAULT_DATE_FORMAT = "%d-%m-%Y"
 DEFAULT_OFFSET = 10
 
-DOMAIN = "flagdays_dk"
+DOMAIN = "flagdage_dk"
 
 KEY_DATE = "date"
 KEY_DATE_END = "date_end"
