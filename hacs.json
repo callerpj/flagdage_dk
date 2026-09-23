@@ -1,6 +1,5 @@
 {
   "name": "Flagdage DK",
   "country": ["DK"],
-  "render_readme": true,
-  "domains": ["sensor"]
+  "render_readme": true
 }
