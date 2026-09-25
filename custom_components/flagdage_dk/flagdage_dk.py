@@ -37,34 +37,34 @@ HALF_MAST_DAYS = [STRINGS["GOOD_FRIDAY"], "Besættelsesdagen"]
 
 REGULAR_FLAGDAYS = {
     "Nytårsdag": {KEY_DATE: "1-1"},
-    "Hendes Majestæt Dronning Marys fødselsdag": {
+    "H.M. Dronning Marys fødselsdag": {
         KEY_DATE: "5-2-1972",
         KEY_TYPE: "ROYAL",
     },
-    "Hendes Kongelige Højhed Prinsesse Maries fødselsdag": {
+    "H.K.H. Prinsesse Maries fødselsdag": {
         KEY_DATE: "6-2-1976",
         KEY_TYPE: "ROYAL",
     },
     "Besættelsesdagen": {KEY_DATE: "9-4-1940", KEY_PRIORITY: 20, KEY_TYPE: "MEMORIAL"},
-    "Hendes Majestæt Dronning Margrethes fødselsdag": {
+    "H.M. Dronning Margrethes fødselsdag": {
         KEY_DATE: "16-4-1940",
         KEY_TYPE: "ROYAL",
     },
-    "Hendes Kongelige Højhed Prinsesse Isabellas fødselsdag": {
+    "H.K.H. Prinsesse Isabellas fødselsdag": {
         KEY_DATE: "21-4-2007",
         KEY_TYPE: "ROYAL",
     },
-    "Hendes Kongelige Højhed Prinsesse Benediktes fødselsdag": {
+    "H.K.H. Prinsesse Benediktes fødselsdag": {
         KEY_DATE: "29-4-1944",
         KEY_TYPE: "ROYAL",
     },
     "Befrielsesdagen": {KEY_DATE: "5-5-1945", KEY_TYPE: "MEMORIAL"},
-    "Hans Majestæt Kongens fødselsdag": {
+    "H.M. Kongens fødselsdag": {
         KEY_DATE: "26-5-1968",
         KEY_TYPE: "ROYAL",
     },
     "Grundlovsdag": {KEY_DATE: "5-6-1849", KEY_TYPE: "MEMORIAL"},
-    "Hans Kongelige Højhed Prins Joachims fødselsdag": {
+    "H.K.H. Prins Joachims fødselsdag": {
         KEY_DATE: "7-6-1969",
         KEY_TYPE: "ROYAL",
     },
@@ -77,7 +77,6 @@ REGULAR_FLAGDAYS = {
         KEY_TYPE: "ROYAL",
     },
     "Juledag": {KEY_DATE: "25-12"},
-    "intet flag":{KEY_DATE: "31-12"},
 }
 
 
@@ -117,6 +116,15 @@ class flagdage_dk:
         regular = self._filter(regular)
 
         self.add(regular)
+
+        # Always keep the next year's New Year's Day in view, so the list
+        # (and the sensor) doesn't run dry once this year's flagdays are
+        # gone - e.g. right after New Year's Eve, before the integration
+        # is next reloaded and rebuilds the full year.
+        next_new_year = {
+            "Nytårsdag": {KEY_DATE: datetime(datetime.today().year + 1, 1, 1)}
+        }
+        self.add(self._filter(next_new_year))
 
     def _filter(self, flagdays):
         removeList = set()
