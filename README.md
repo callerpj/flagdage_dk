@@ -12,7 +12,7 @@ Sensor with official flagdays in Denmark, with an option to add your own (birthd
 
 ## BREAKING CHANGES
 The integration has been rewritten and received some TLC and improvements.
-+ fork of @J-Lindvig's FlagDays_DK, The domain was renamed from `flagdays_dk` to **flagdage_dk**. See [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below if you're upgrading.
++ fork of @J-Lindvig  FlagDays_DK, The domain was renamed from `flagdays_dk` to **flagdage_dk**. See [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below if you're upgrading.
 + Configuration no longer lives in `configuration.yaml`. Everything is now set up and changed through Home Assistant's UI (a **config flow**). See [Setup](#setup) and [Changing settings later](#changing-settings-later) below.
 + The integration now survives New Year's Eve on its own: once the year changes, it automatically reloads itself and rebuilds the full list of flagdays (default, Easter-based, your own, and sensor-sourced) for the new year — no restart needed.
 
