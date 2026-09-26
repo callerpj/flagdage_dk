@@ -18,7 +18,7 @@ The integration has been rewritten and received some TLC and improvements.
 
 For installation instructions [see this guide](https://hacs.xyz/docs/faq/custom_repositories).
 
-!OBS if you are migrating ffrom Flagdays_DK read [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below first and then restart Homeassistant
+!OBS if you are migrating from Flagdays_DK read [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below first and then restart Homeassistant
 
 ## Setup
 1. In Home Assistant, go to **Settings → Devices & services → Add integration** and search for **Flagdage DK**.
@@ -72,9 +72,11 @@ The original integration used to be called `flagdays_dk`. If you're migrating fr
 2. Any old config entry still named "FlagDays DK" (from a previous UI-based setup under the old domain) should be removed manually afterwards, since it's no longer used.
 
 ## State and attributes
-State is the number of days to the event.
-![image](https://user-images.githubusercontent.com/54498188/212568684-7572c620-a79e-4b3a-a61b-5148eb03d5be.png)
-Friendly name is the name of the next flagday.
+State is the next flag ction date and time
+
+flagday_name is the name of the next flagday.
+
+<img width="637" height="567" alt="^flagdage_dk_values" src="https://github.com/user-attachments/assets/1b14d334-a217-4a74-888d-c909df9c5555" />
 
 
 ### Attributes
