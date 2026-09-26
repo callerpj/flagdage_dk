@@ -38,11 +38,29 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(hass, entry, async_add_entities):
     data = hass.data[DOMAIN][entry.entry_id]
     flagdays = data[CONF_CLIENT]
+    seen_year = datetime.now().year
 
     # Define a update function
     async def async_update_data():
+        nonlocal seen_year
+
         # Call, and wait for it to finish, the function with the refresh procedure
-        return await hass.async_add_executor_job(flagdays.update)
+        result = await hass.async_add_executor_job(flagdays.update)
+
+        # New year: reload the whole config entry so the regular flagdays
+        # (incl. Easter-based ones) and the custom/sensor flagdays are all
+        # rebuilt for the new year, instead of just running dry once the
+        # next-year fallback entry has passed too.
+        current_year = datetime.now().year
+        if current_year != seen_year:
+            seen_year = current_year
+            _LOGGER.info(
+                "New year detected, reloading %s to rebuild the flagday list",
+                DOMAIN,
+            )
+            hass.async_create_task(hass.config_entries.async_reload(entry.entry_id))
+
+        return result
 
     # Create a coordinator
     coordinator = DataUpdateCoordinator(

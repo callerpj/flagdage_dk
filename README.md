@@ -7,76 +7,72 @@
 
 
 # Flagdage_DK
-## fork of J-Linvigs FlagDays_DK
+## fork of J-Lindvig's FlagDays_DK
 
-Sensor with official flagdays in Denmark, with a option to add your own (birthdays etc.)
+Sensor with official flagdays in Denmark, with an option to add your own (birthdays etc.)
 
 ## BREAKING CHANGES
-The integration has been rewritten and have received some TLC and improvements.
-+ ~~time_offset~~ is now **offset** (Again). Default is 10 minutes
+The integration has been rewritten and received some TLC and improvements.
++ The domain was renamed from `flagdays_dk` to **flagdage_dk**. See [Renamed from flagdays_dk](#renamed-from-flagdays_dk) below if you're upgrading.
++ Configuration no longer lives in `configuration.yaml`. Everything is now set up and changed through Home Assistant's UI (a **config flow**). See [Setup](#setup) and [Changing settings later](#changing-settings-later) below.
++ ~~time_offset~~ is now **offset**. Default is 10 minutes.
 + ~~hide_past~~ is removed.
 + ~~flags~~ is removed. We are now using **include** and **exclude**.
++ The integration now survives New Year's Eve on its own: once the year changes, it automatically reloads itself and rebuilds the full list of flagdays (default, Easter-based, your own, and sensor-sourced) for the new year — no restart needed.
 
 For installation instructions [see this guide](https://hacs.xyz/docs/faq/custom_repositories).
-## Quick start
-Add the following to your configuration.yaml
-```yaml
-flagdays_dk:
-  # Optional entries
-  
-  # Time in minutes before flag up/down times, used for triggers fx. automation, Default is 10
-  offset: 5
 
-  # Include and Exclude options
-  include:
-    - Erfalasorput    # Either name of a special (commonwealth) flag
-    - Færøerne        # or a string with a part of the flagdays name
+## Setup
+1. In Home Assistant, go to **Settings → Devices & services → Add integration** and search for **Flagdage DK**.
+2. Fill in the basic settings:
 
-  # Strings to be present in the flagdays name and which should be excluded
-  exclude:
-    - Kongelig
-    - Udsendte
-    - Religiøs
-    - ALL
+   | Field | Description |
+   |---|---|
+   | **Offset** | Minutes before flag up/down time, used e.g. for automation triggers. Default: 10 |
+   | **Include** | Name of a special (commonwealth) flag (e.g. `Erfalasorput`, `Merkið`) or a string that's part of a flagday's name, so it's kept even though its flag isn't the Dannebrog. You can pick a suggestion or type your own. |
+   | **Exclude – defaults** | Tick any of the built-in options to hide those flagdays: **Kongelige** (royal birthdays), **Udsendte** (Denmark's deployed), **Religiøs** (religious flagdays), or **all** (hide every default flagday, keep only your own/sensor-based ones). |
+   | **Exclude – custom** | Any further text that should be excluded if it's part of a flagday's name. Add or remove entries freely. |
 
-  # List of private flagdays
-  flagdays:
-    # Sensor with a datetime attribute named "date" or a attribute specified under "attribute_names"
-    - sensor.birthday_hjaltes_fodselsdag
+3. Confirm — the integration is created, without any custom flagdays yet. Everything else (adding your own flagdays, using sensors as a source) is done afterwards via **Configure**, described below.
 
-    # Group of sensors with a datetime attribute named "date"
-    - group.birthdays
+## Changing settings later
+Open the integration's entry and click **Configure**. You get a menu with four options:
 
-    # Manual entry with a custom flag, calculation of age (year stated in date) and a high priority (0 = highest)
-    - name: Jolly Roger Memorial Day
-      flag: Jolly Roger
-      date: 10-06-1975
-      priority: 2
+### Settings
+Change offset, include and exclude at any time, same fields as during setup.
 
-    # Manual entry with a prolonged event (**date_end**) and custom flag
-    - name: Copenhagen Pride Month
-      flag: Pride
-      date: 01-08
-      date_end: 31-08
+### Add custom flagday
+Add one flagday at a time:
 
-    # Manual entry with calculation of age (year stated in date)
-    - name: Tim Berners Lee Birthday
-      date: 08-06-1955
+| Field | Required | Description |
+|---|---|---|
+| **Name** | yes | The flagday's name. Must be unique among your custom flagdays. |
+| **Date** | yes | `day-month-year` (e.g. `10-6-1975`) if you want the age calculated, or `day-month` (e.g. `1-8`) for a yearly recurring date without an age. |
+| **Date end** | no | For a prolonged event spanning several days (e.g. a whole month), the last day as `day-month` (e.g. `31-8`). Must be in the same year and not before the start date. |
+| **Flag** | no | Name of a special flag to use for this flagday (e.g. `Pride`, `Jolly Roger`). Leave empty for the regular Dannebrog. |
+| **Add another** | — | Tick this to keep the form open and add several flagdays in a row. |
 
-    # Manual entry with calculation of age (year stated in date)
-    - name: Ada Lovelace Birthday
-      date: 10-12-1815
+The date is validated as you go — an invalid date or a name you already used shows an error right on the form instead of silently failing.
 
-  # ADVANCED and optional
-  # When feeding other sensors or groups of sensor, look for these attribute names.
-  # First one found in the sensor attributes of datetime type is used.
-  # Default: "date"
-  attribute_names:
-    - date
-    - anniversary_date
-  
+### Remove custom flagdays
+Pick one or more of your existing custom flagdays from a list (showing name, date, and flag) and remove them.
 
-```
+### Sensors as source
+Use existing Home Assistant sensors (or groups of sensors) as flagdays — handy for e.g. birthday sensors from the *Anniversaries* integration:
+
+| Field | Description |
+|---|---|
+| **Sensors / groups** | Pick one or more `sensor.*` or `group.*` entities. A group's member sensors are used individually; the sensor's friendly name becomes the flagday's name. |
+| **Attribute names holding the date** | Which attribute(s) to look for a date in, e.g. `date` or `anniversary_date`. The first attribute found (in this order) that holds a date is used. Default: `date` |
+
+Changes picked up from a sensor's attributes (e.g. a birth year edited afterwards) only take effect after the integration reloads — either automatically (at the New Year, see above) or via **Configure → Settings → Submit**, which also reloads it.
+
+## Renamed from flagdays_dk
+This integration used to be called `flagdays_dk`. If you're upgrading from that version:
+
+1. Home Assistant only recognizes an integration for a key that matches an installed component's domain. If you still have a `flagdays_dk:` block in your `configuration.yaml` from before the config-flow rewrite, rename it to `flagdage_dk:` (the rest of the block stays the same), then restart Home Assistant. Your settings will be imported once, automatically, as a config entry named "Flagdage DK". Afterwards you can delete the YAML block entirely.
+2. Any old config entry still named "FlagDays DK" (from a previous UI-based setup under the old domain) should be removed manually afterwards, since it's no longer used.
+
 ## State and attributes
 State is the number of days to the event.
 ![image](https://user-images.githubusercontent.com/54498188/212568684-7572c620-a79e-4b3a-a61b-5148eb03d5be.png)
@@ -87,13 +83,13 @@ Friendly name is the name of the next flagday.
 
 | Attribute name             | Description                        |
 |----------------------------|------------------------------------|
-| name                       | Name of the flagday                |
+| flagday_name                | Name of the flagday                |
+| days                       | Number of days to the flagday      |
 | flag                       | Name of flag to use                |
 | years                      | Age to come, if calculated         |
 | flag_up_time               | Time to hoist the flag             |
 | flag_down_time             | Time to pull the flag              |
-| flag_up_time_trigger       | Trigger to use for flag up         |
-| flag_down_time_trigger     | Trigger to use for flag down       |
 | half_mast                  | True/False/Time for full mast      |
+| concurrent_flagdays        | Other flagdays on the same date    |
 | future_flagdays            | List of flagdays in the future     |
 | attribution                | Name of the creator                |

@@ -72,7 +72,7 @@ REGULAR_FLAGDAYS = {
     "Grønlands nationaldag": {KEY_DATE: "21-6", KEY_FLAG: "Erfalasorput"},
     "Færøernes nationale festdag, Olai Dag": {KEY_DATE: "29-7", KEY_FLAG: "Merkið"},
     "Danmarks udsendte": {KEY_DATE: "5-9", KEY_TYPE: "MEMORIAL"},
-    "Hans Kongelige Højhed Kronprins Christians fødselsdag": {
+    "H.K.H. Kronprins Christians fødselsdag": {
         KEY_DATE: "15-10-2005",
         KEY_TYPE: "ROYAL",
     },
