@@ -7,20 +7,18 @@
 
 
 # Flagdage_DK
-## fork of J-Lindvig's FlagDays_DK
 
 Sensor with official flagdays in Denmark, with an option to add your own (birthdays etc.)
 
 ## BREAKING CHANGES
 The integration has been rewritten and received some TLC and improvements.
-+ The domain was renamed from `flagdays_dk` to **flagdage_dk**. See [Renamed from flagdays_dk](#renamed-from-flagdays_dk) below if you're upgrading.
++ fork of @J-Lindvig's FlagDays_DK, The domain was renamed from `flagdays_dk` to **flagdage_dk**. See [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below if you're upgrading.
 + Configuration no longer lives in `configuration.yaml`. Everything is now set up and changed through Home Assistant's UI (a **config flow**). See [Setup](#setup) and [Changing settings later](#changing-settings-later) below.
-+ ~~time_offset~~ is now **offset**. Default is 10 minutes.
-+ ~~hide_past~~ is removed.
-+ ~~flags~~ is removed. We are now using **include** and **exclude**.
 + The integration now survives New Year's Eve on its own: once the year changes, it automatically reloads itself and rebuilds the full list of flagdays (default, Easter-based, your own, and sensor-sourced) for the new year — no restart needed.
 
 For installation instructions [see this guide](https://hacs.xyz/docs/faq/custom_repositories).
+
+!OBS if you are migrating ffrom Flagdays_DK read [Migrate from flagdays_dk](#migrate-from-flagdays_dk) below first and then restart Homeassistant
 
 ## Setup
 1. In Home Assistant, go to **Settings → Devices & services → Add integration** and search for **Flagdage DK**.
@@ -67,8 +65,8 @@ Use existing Home Assistant sensors (or groups of sensors) as flagdays — handy
 
 Changes picked up from a sensor's attributes (e.g. a birth year edited afterwards) only take effect after the integration reloads — either automatically (at the New Year, see above) or via **Configure → Settings → Submit**, which also reloads it.
 
-## Renamed from flagdays_dk
-This integration used to be called `flagdays_dk`. If you're upgrading from that version:
+## Migrate from flagdays_dk
+The original integration used to be called `flagdays_dk`. If you're migrating from that version:
 
 1. Home Assistant only recognizes an integration for a key that matches an installed component's domain. If you still have a `flagdays_dk:` block in your `configuration.yaml` from before the config-flow rewrite, rename it to `flagdage_dk:` (the rest of the block stays the same), then restart Home Assistant. Your settings will be imported once, automatically, as a config entry named "Flagdage DK". Afterwards you can delete the YAML block entirely.
 2. Any old config entry still named "FlagDays DK" (from a previous UI-based setup under the old domain) should be removed manually afterwards, since it's no longer used.
