@@ -16,8 +16,6 @@
   "loggers": [
     "custom_components.flagdage_dk"
   ],
-  "requirements": [
-    "astral"
-  ],
+  "requirements": [],
   "version": "26.9.5"
 }
