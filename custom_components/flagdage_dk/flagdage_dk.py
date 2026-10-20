@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from .easter import easter
+import calendar
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 import logging
@@ -18,6 +19,22 @@ from .const import (
     KEY_PRIORITY,
     KEY_TYPE,
 )
+
+
+def _day_month_in_year(value, year):
+    """Build a datetime for a 'd-m' or 'd-m-YYYY' string in the given year.
+
+    29-2 is mapped to 28-2 in non-leap years. Raises ValueError for
+    unparsable or impossible dates.
+    """
+    parts = str(value).strip().split("-")
+    if len(parts) not in (2, 3):
+        raise ValueError(f"invalid date '{value}'")
+    day, month = int(parts[0]), int(parts[1])
+    if month == 2 and day == 29 and not calendar.isleap(year):
+        day = 28
+    return datetime(year, month, day)
+
 
 DEFAULT_FLAG = "Dannebrog"
 DEFAULT_PRIORITY = 10
@@ -176,7 +193,16 @@ class flagdage_dk:
     def add(self, flagdays):
         if type(flagdays) is dict:
             for flagdayName, flagdayData in flagdays.items():
-                self.flagdays.append(flagday(name=flagdayName, data=flagdayData))
+                try:
+                    self.flagdays.append(flagday(name=flagdayName, data=flagdayData))
+                except (KeyError, TypeError, ValueError) as err:
+                    # One bad entry must not break the whole setup
+                    _LOGGER.warning(
+                        "Skipping flagday '%s' with invalid data %s: %s",
+                        flagdayName,
+                        flagdayData,
+                        err,
+                    )
             self.sort()
 
     def sort(self):
@@ -265,33 +291,19 @@ class flagday:
         self.name = name
 
         # Date of flagday
+        year = datetime.today().year
         if type(data[KEY_DATE]) is str:
+            # 29-2 becomes 28-2 in non-leap years
+            self.date = _day_month_in_year(data[KEY_DATE], year)
             if data[KEY_DATE].count("-") > 1:
-                # Strip the year from the datestring, append current year and convert to datetime
-                self.date = datetime.strptime(
-                    data[KEY_DATE].rpartition("-")[0]
-                    + "-"
-                    + str(datetime.today().year),
-                    DEFAULT_DATE_FORMAT,
-                )
-                # Calculate years passed from the original date and the flagday
-                self.years = relativedelta(
-                    self.date, datetime.strptime(data[KEY_DATE], "%d-%m-%Y")
-                ).years
-            else:
-                self.date = datetime.strptime(
-                    data[KEY_DATE] + "-" + str(datetime.today().year),
-                    DEFAULT_DATE_FORMAT,
-                )
+                # Calculate years passed from the original year to this year
+                self.years = year - int(data[KEY_DATE].strip().rpartition("-")[2])
         else:
             self.date = data[KEY_DATE]
 
         # End of prolonged flagday
         if KEY_DATE_END in data:
-            self.dateEnd = datetime.strptime(
-                data[KEY_DATE_END] + "-" + str(datetime.today().year),
-                DEFAULT_DATE_FORMAT,
-            )
+            self.dateEnd = _day_month_in_year(data[KEY_DATE_END], year)
 
         # Halfmast
         if self.name in HALF_MAST_DAYS:

@@ -34,6 +34,10 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 _LOGGER = logging.getLogger(__name__)
 
+# Created once at import time: building a ZoneInfo reads tz data from disk,
+# which must not happen inside the event loop (e.g. in the state property).
+TIMEZONE = ZoneInfo("Europe/Copenhagen")
+
 
 async def async_setup_entry(hass, entry, async_add_entities):
     data = hass.data[DOMAIN][entry.entry_id]
@@ -109,8 +113,7 @@ class FlagDaysSensor(SensorEntity):
             self.hass.config.longitude,
             self.hass.config.elevation,
         )
-        tzinf=ZoneInfo(key='Europe/Copenhagen')
-        s = sun(geo, date=self.nextFlagday.date, tzinfo=tzinf)
+        s = sun(geo, date=self.nextFlagday.date, tzinfo=TIMEZONE)
         self.flagUpTime = (
             s["sunrise"].replace(hour=8, minute=0, second=0)
             if s["sunrise"].hour < 8
@@ -118,7 +121,7 @@ class FlagDaysSensor(SensorEntity):
         )
         self.flagDownTime = s["sunset"]
 
-        dt_now = datetime.now().astimezone(tzinf)
+        dt_now = datetime.now().astimezone(TIMEZONE)
         _LOGGER.debug(f"Now: {dt_now}")
         offset = timedelta(minutes=self._offset)
         _LOGGER.debug(f"flagUpTime: {self.flagUpTime}")

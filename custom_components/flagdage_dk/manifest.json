@@ -1,21 +1,14 @@
 {
   "domain": "flagdage_dk",
   "name": "FlagDage DK",
-  "after_dependencies": [
-    "anniversaries",
-    "group"
-  ],
-  "codeowners": [
-    "@callerpj"
-  ],
+  "after_dependencies": ["anniversaries", "group"],
+  "codeowners": ["@callerpj"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/callerpj/Flagdage_DK",
   "iot_class": "calculated",
   "issue_tracker": "https://github.com/callerpj/Flagdage_DK/issues",
-  "loggers": [
-    "custom_components.flagdage_dk"
-  ],
+  "loggers": ["custom_components.flagdage_dk"],
   "requirements": [],
-  "version": "26.9.5"
+  "version": "26.9.6"
 }

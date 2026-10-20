@@ -150,8 +150,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Custom flagdays: {name: {date: ..., priority: ...}}
     customFlagdays = {}
     for item in cfg.get(CONF_FLAGDAYS, []):
-        data = dict(item)
-        name = data.pop(KEY_NAME)
+        try:
+            data = dict(item)
+            name = data.pop(KEY_NAME)
+        except (KeyError, TypeError, ValueError) as err:
+            _LOGGER.warning("Skipping invalid custom flagday %s: %s", item, err)
+            continue
         data.setdefault(KEY_PRIORITY, 0)
         customFlagdays[name] = data
 
