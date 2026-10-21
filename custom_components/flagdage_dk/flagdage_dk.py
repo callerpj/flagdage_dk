@@ -112,7 +112,7 @@ class flagdage_dk:
         }
 
         regular = dict(REGULAR_FLAGDAYS)
-        e = easter()
+        e = easter(datetime.today().year)
         regular[STRINGS["EASTER_SUNDAY"]] = {
             KEY_DATE: e.getEasterSunday(),
             KEY_TYPE: "RELIGIOUS",

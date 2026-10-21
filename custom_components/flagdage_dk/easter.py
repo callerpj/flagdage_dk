@@ -3,7 +3,12 @@ import math
 
 
 class easter:
-    def __init__(self, year=int(datetime.today().year)):
+    def __init__(self, year=None):
+        # Resolve the year at call time, not at import time: a default
+        # argument would be frozen when the module is first imported and
+        # stay stale across a config entry reload in a new year.
+        if year is None:
+            year = datetime.today().year
 
         self._holidays = {}
 
